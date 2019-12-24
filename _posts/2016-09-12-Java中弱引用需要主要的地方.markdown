@@ -1,0 +1,109 @@
+---
+layout: post
+title: Java中弱引用需要注意的地方
+date: 2017-09-12 00:00:00 +0300
+description:  # Add post description (optional)
+img: how-to-start.jpg # Add image post (optional)
+tags: [Programming, Learn] # add tag
+---
+
+为了更好的理解弱引用，务必对WeakReference有清晰的认识
+
+[source,java]
+----
+    /**
+     * Returns this reference object's referent.  If this reference object has
+     * been cleared, either by the program or by the garbage collector, then
+     * this method returns <code>null</code>.
+     *
+     * @return   The object to which this reference refers, or
+     *           <code>null</code> if this reference object has been cleared
+     */
+    public T get() {
+        return this.referent;
+    }
+----
+
+[source,java]
+----
+    /**
+     * Clears this reference object.  Invoking this method will not cause this
+     * object to be enqueued.
+     *
+     * <p> This method is invoked only by Java code; when the garbage collector
+     * clears references it does so directly, without invoking this method.
+     */
+    public void clear() {
+        this.referent = null;
+    }
+----
+
+* WeakReference不会强制对象保存在内存中。它拥有比较短暂的生命周期，允许你使用垃圾回收器的能力去权衡一个对象的可达性。在垃圾回收器扫描它所管辖的内存区域过程中，一旦gc发现对象是weakReference可达，就会把它放到ReferenceQueue中，等下次gc时回收它。
+
+* 由于WeakReference被GC回收的可能性较大，因此，在使用它之前，你需要通过weakObj.get()去判断目的对象引用是否已经被回收.
+
+* 如果用关联的引用队列创建弱引用，在 referent 成为 GC 候选对象时，这个引用对象（不是 referent）就在引用清除后加入 到引用队列中。之后，应用程序从引用队列提取引用并了解到它的 referent 已被收集
+
+* 引用队列(Reference Queue)
+
+** 引用队列可以在弱引用的 referent 被垃圾收集时加入队列，方便进行其他处理。
+
+** 一旦弱引用对象开始返回null，该弱引用指向的对象就被标记成了垃圾。而这个弱引用对象（非其指向的对象）就没有什么用了。通常这时候需要进行一些清理工作。比如WeakHashMap会在这时候移除没用的条目来避免保存无限制增长的没有意义的弱引用。
+
+** 引用队列可以很容易地实现跟踪不需要的引用。当你在构造WeakReference时传入一个ReferenceQueue对象，当该引用指向的对象被标记为垃圾的时候，这个引用对象会自动地加入到引用队列里面。接下来，你就可以在固定的周期，处理传入的引用队列，比如做一些清理工作来处理这些没有用的引用对象。
+
+==== 看几个例子，帮助理解：
+
+[source,java]
+----
+@Test
+    public void test() {
+        TestObject strongObj = new TestObject("我是测试对象");
+        WeakReference<TestObject> weakReferenceObj = new WeakReference<>(strongObj);
+
+        int i = 1;
+        while (true) {
+            System.out.println("第" + ++i + "次");
+            if (weakReferenceObj.get() != null) {
+                System.out.println("weakReferenceObj 可达 ");
+            } else {
+                System.out.println("weakReferenceObj 不可达 ");
+                break;
+            }
+        }
+    }
+----
+
+输出结果：
+----
+第80473次
+weakReferenceObj 可达 
+第80474次
+weakReferenceObj 不可达
+----
+
+[source,java]
+----
+@Test
+    public void test() {
+        TestObject strongObj = new TestObject("我是测试对象");
+        WeakReference<TestObject> weakReferenceObj = new WeakReference<>(strongObj);
+
+        int i = 1;
+        while (true) {
+            System.out.println("第" + ++i + "次");
+            System.out.println(strongObj);
+            if (weakReferenceObj.get() != null) {
+                System.out.println("可达 ");
+            } else {
+                System.out.println("不可达 ");
+                break;
+            }
+        }
+    }
+----
+
+输出结果：
+----
+死循环
+----
