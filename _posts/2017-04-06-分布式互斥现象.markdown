@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 分布式互斥 DISTRIBUTED MUTUAL EXCLUSION
-date: 2017-09-10 00:00:00 +0300
+title: 分布式互斥
+date: 2017-04-06 00:00:00 +0300
 description: 分布式互斥现象研究 # Add post description (optional)
 img: # Add image post (optional)
 tags: [Js, Conference] # add tag

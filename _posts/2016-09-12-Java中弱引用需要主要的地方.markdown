@@ -1,51 +1,111 @@
 ---
 layout: post
-title: 分布式系统网络互联的几个议题
-date: 2018-03-27 00:00:00 +0300
+title: 再看java中的弱引用
+date: 2016-09-12 00:00:00 +0300
 description:  # Add post description (optional)
 img: how-to-start.jpg # Add image post (optional)
-tags: [分布式系统] # add tag
+tags: [java, 弱引用] # add tag
 ---
 
-## 性能
 
-延迟：执行操作之后和到达计算机之前的这段时间。
+== WeakReference
+为了更好的理解弱引用，务必对WeakReference有清晰的认识
 
-数据传输率：一旦传输过程开始，数据在网络上两台计算机之间的传输速度，bit/s
-
+[source,java]
 ----
-传输时间= 延迟 + 传输距离/数据传输率
+    /**
+     * Returns this reference object's referent.  If this reference object has
+     * been cleared, either by the program or by the garbage collector, then
+     * this method returns <code>null</code>.
+     *
+     * @return   The object to which this reference refers, or
+     *           <code>null</code> if this reference object has been cleared
+     */
+    public T get() {
+        return this.referent;
+    }
 ----
 
-举例：一个客户将200字节的请求消息发送到一个服务，服务产生了5000字节的应答。
-1> 使用TCP
-2> 使用UDP
-3> 客户和服务器在一个主机上
+[source,java]
+----
+    /**
+     * Clears this reference object.  Invoking this method will not cause this
+     * object to be enqueued.
+     *
+     * <p> This method is invoked only by Java code; when the garbage collector
+     * clears references it does so directly, without invoking this method.
+     */
+    public void clear() {
+        this.referent = null;
+    }
+----
 
-- 发送/接收时，每个数据包延迟（本地或远程）:5ms
-- 建立连接的时间(仅针对TCP):5ms
-- 数据传输速率：10Mbps
-- MTU:1000字节
-- 服务器处理请求的时间：2ms
-- 网络处于轻负载状态
+* WeakReference不会强制对象保存在内存中。它拥有比较短暂的生命周期，允许你使用垃圾回收器的能力去权衡一个对象的可达性。在垃圾回收器扫描它所管辖的内存区域过程中，一旦gc发现对象是weakReference可达，就会把它放到ReferenceQueue中，等下次gc时回收它。
 
-请求时间（服务器收到）: 
+* 由于WeakReference被GC回收的可能性较大，因此，在使用它之前，你需要通过weakObj.get()去判断目的对象引用是否已经被回收.
 
-5ms(发送延迟)+0ms(传输延迟）+ 5ms(接收延迟)
-= 10ms
+* 如果用关联的引用队列创建弱引用，在 referent 成为 GC 候选对象时，这个引用对象（不是 referent）就在引用清除后加入 到引用队列中。之后，应用程序从引用队列提取引用并了解到它的 referent 已被收集
 
-相应时间 （客户端收到）
+* 引用队列(Reference Queue)
 
-MTU分片5条消息，每条的消息的延迟为
-2ms(服务器处理时间)+ 5ms(发送延迟)+0ms(传输延迟）+ 5ms(接收延迟)
-= 12
+** 引用队列可以在弱引用的 referent 被垃圾收集时加入队列，方便进行其他处理。
 
-12ms*5 = 60ms
+** 一旦弱引用对象开始返回null，该弱引用指向的对象就被标记成了垃圾。而这个弱引用对象（非其指向的对象）就没有什么用了。通常这时候需要进行一些清理工作。比如WeakHashMap会在这时候移除没用的条目来避免保存无限制增长的没有意义的弱引用。
 
-总计 10+60 = 70ms
+** 引用队列可以很容易地实现跟踪不需要的引用。当你在构造WeakReference时传入一个ReferenceQueue对象，当该引用指向的对象被标记为垃圾的时候，这个引用对象会自动地加入到引用队列里面。接下来，你就可以在固定的周期，处理传入的引用队列，比如做一些清理工作来处理这些没有用的引用对象。
 
-=== 路由器与交换机
-路由器：RIP，距离向量算法，链路-状态算法
-互联网下的解决方案：固定拓扑区域对应固定的路由网关地址；默认路由，在表格大小与效率折中；
+==== 看几个例子，帮助理解：
 
-交换机：分离了到达的流量；ARP，IP与MAC（以太网地址）的映射表
+[source,java]
+----
+@Test
+    public void test() {
+        TestObject strongObj = new TestObject("我是测试对象");
+        WeakReference<TestObject> weakReferenceObj = new WeakReference<>(strongObj);
+
+        int i = 1;
+        while (true) {
+            System.out.println("第" + ++i + "次");
+            if (weakReferenceObj.get() != null) {
+                System.out.println("weakReferenceObj 可达 ");
+            } else {
+                System.out.println("weakReferenceObj 不可达 ");
+                break;
+            }
+        }
+    }
+----
+
+输出结果：
+----
+第80473次
+weakReferenceObj 可达 
+第80474次
+weakReferenceObj 不可达
+----
+
+[source,java]
+----
+@Test
+    public void test() {
+        TestObject strongObj = new TestObject("我是测试对象");
+        WeakReference<TestObject> weakReferenceObj = new WeakReference<>(strongObj);
+
+        int i = 1;
+        while (true) {
+            System.out.println("第" + ++i + "次");
+            System.out.println(strongObj);
+            if (weakReferenceObj.get() != null) {
+                System.out.println("可达 ");
+            } else {
+                System.out.println("不可达 ");
+                break;
+            }
+        }
+    }
+----
+
+输出结果：
+----
+死循环
+----
