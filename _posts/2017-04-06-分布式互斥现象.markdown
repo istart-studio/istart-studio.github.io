@@ -1,25 +1,22 @@
 ---
 layout: post
-title: 分布式互斥
+title: 分布式互斥 DISTRIBUTED MUTUAL EXCLUSION
 date: 2017-09-10 00:00:00 +0300
 description: 分布式互斥现象研究 # Add post description (optional)
-img: js-1.png # Add image post (optional)
+img: # Add image post (optional)
 tags: [Js, Conference] # add tag
 ---
-= DISTRIBUTED MUTUAL EXCLUSION
 
-== 分布式互斥
+## 要点
 
-
-[preface]
-----------
 
 - 临界区问题
 - 解决分布式互斥问题的解决方案：基于消息传送的解决方案
 - 这种解决方案独立于特定的资源管理方案，下面会具体描述其算法
 - 部分算法后在还会进一步描述
 
-----------
+
+
 
 [NOTE]
 有些应用场景是没有服务器的，且需要协调它们（一对进程）对共享资源的访问。这种情况经常出现在以太网、"自组织"模式的IEEE 802.11 无线网等网络中，其中网络接口作为对等成分进行协作，使得在共享介质上一次只有一个节点进行传输。
@@ -31,8 +28,8 @@ tags: [Js, Conference] # add tag
 - UNIX系统提供由locked（守护进程）实现的一个文件加锁服务。
 
 
-== 互斥算法
-
+互斥算法
+-----
 假设：
 
 - 无共享变量的N个进程p~i~(i=1,2,···,N)的系统。这些进程只在临界区内访问公共资源。
@@ -124,7 +121,7 @@ N个进程中安排互斥而不需其他进程的简单方法之一：将这些�
 
 进入临界区的进程组播一个请求消息，并且只有在其他进程都回答了这个消息时才能进入。进程回答请求的条件满足ME1，ME2，ME3
 
-进程p~1~,p~2~,···,p~N~具有不同的数字标识符，且每个进程p~i~保持一个根据LC1和LC2更新的Lamport时钟。请求进入的消息如<T,p~i~>,其中T是发送者的时间戳，p~i~是发送者的标识符。
+进程p{1},p{2},···,p{N}具有不同的数字标识符，且每个进程p~i~保持一个根据LC1和LC2更新的Lamport时钟。请求进入的消息如<T,p~i~>,其中T是发送者的时间戳，p~i~是发送者的标识符。
 
 每个进程在标亮state中记录它的状态，这些状态包括在临界区外（RELEASED）、希望进入（WANTED）以及在临界区内（HELD）。
 
@@ -155,9 +152,8 @@ state：=HELD；
 
 - On receipt of a request <T~i~, p~i~> at p~j~ (i不等于j)
 
-[source,java]
-****
-if( state=HELD or ( state=WANTED and (T,p~j~) < (T~i~,p~i~) ) )
+```
+if( state=HELD or ( state=WANTED and (T,p{j}) < (T{i},p{i}) ) )
 
 _如果 我已经HELD 或者 我也想要而且你的时间比我晚_
 
@@ -170,6 +166,7 @@ else
 马上给p~i~应答 // <1>
 
 endif
+```
 
 [TIP]
 请求处理在这里被延期
@@ -253,7 +250,7 @@ state：=RELEASED;
 计算最优集合，这关系到实现的复杂度，现在依然再进行研究，并产出各种的优化算法，很多毕业论文都以此为出发点，进行研究。
 
 伪代码：
-----
+```
 On initialization
 	state := RELEASED;
 	voted := FALSE;
@@ -282,7 +279,7 @@ On receipt of a release from pi at pj
 	else
 		voted := FALSE;
 	end if
-----
+```
 
 [TIP]
 Sanders[3]证明了Maekawa的互斥访问临界区消息机制存在死锁,并引入了带时间戳(时间戳概念最早在Lamport[4]提出)的请求消息.修改后的协议，进程按照发生在先顺序对待应答的请求排队，也满足ME3。
