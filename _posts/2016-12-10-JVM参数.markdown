@@ -1,11 +1,10 @@
 ---
 layout: post
-title: 垃圾回收
-date: 2017-02-01
-description: 垃圾回收 # Add post description (optional)
-img: i-rest.jpg # Add image post (optional)
-fig-caption: # Add figcaption (optional)
-tags: [Java, GC]
+title: JVM 参数
+date: 2016-12-10 00:00:00 +0300
+description: JVM参数 # Add post description (optional)
+img:  # Add image post (optional)
+tags: [Java, JVM] # add tag
 ---
 Heap：
 
