@@ -1,0 +1,81 @@
+---
+layout: post
+title: 内存分析工具MAT
+date: 2017-09-12 00:00:00 +0300
+description: java内存分析工具MAT # Add post description (optional)
+img: workflow.jpg # Add image post (optional)
+fig-caption: # Add figcaption (optional)
+tags: [Java, MAT, 内存分析] # add tag
+---
+
+
+- MAT的下载地址：https://eclipse.org/mat/downloads.php 
+
+- 两种使用方式：
+    1. 独立使用
+    2. eclipse自带MAT也可以使用
+    
+
+- Shallow heap
+
+Shallow size就是对象本身占用内存的大小，不包含其引用的对象。
+
+常规对象（非数组）的Shallow size有其成员变量的数量和类型决定。
+
+数组的shallow size有数组元素的类型（对象类型、基本类型）和数组长度决定
+因为不像c++的对象本身可以存放大量内存，java的对象成员都是些引用。
+
+真正的内存都在堆上，看起来是一堆原生的byte[], char[], int[]，所以我们如果只看对象本身的内存，那么数量都很小。所以我们看到Histogram图是以Shallow size进行排序的，排在第一位第二位的是byte，char 。
+
+
+-  Retained Heap
+
+
+它表示如果一个对象被释放掉，那会因为该对象的释放而减少引用进而被释放的所有的对象（包括被递归释放的）所占用的heap大小。于是，如果一个对象的某个成员new了一大块int数组，那这个int数组也可以计算到这个对象中。相对于shallow heap，Retained heap可以更精确的反映一个对象实际占用的大小（因为如果该对象释放，retained heap都可以被释放）。
+
+Retained Heap并不总是那么有效。例如我在A里new了一块内存，赋值给A的一个成员变量。此时我让B也指向这块内存。此时，因为A和B都引用到这块内存，所以A释放时，该内存不会被释放。所以这块内存不会被计算到A或者B的Retained Heap中。[underline]##为了纠正这点，MAT中的Leading Object（例如A或者B）不一定只是一个对象，也可以是多个对象。此时，(A, B)这个组合的*Retained Set*就包含那块大内存了。__对应到MAT的UI中，在Histogram中，可以选择Group By class, superclass or package来选择这个组__##。
+
+
+=== 备注
+
+为了计算Retained Memory，MAT引入了[underline]##__Dominator Tree__##。加入对象A引用B和C，B和C又都引用到D（一个菱形）。此时要计算Retained Memory，A的包括A本身和B，C，D。B和C因为共同引用D，所以他俩的Retained Memory都只是他们本身。D当然也只是自己。我觉得是为了加快计算的速度，MAT改变了对象引用图，而转换成一个对象引用树。在这里例子中，树根是A，而B，C，D是他的三个儿子。B，C，D不再有相互关系。把引用图变成引用树，计算Retained Heap就会非常方便，显示也非常方便。对应到MAT UI上，在dominator tree这个view中，显示了每个对象的shallow heap和retained heap。然后可以以该节点位树根，一步步的细化看看retained heap到底是用在什么地方了。要说一下的是，这种从图到树的转换确实方便了内存分析，但有时候会让人有些疑惑。本来对象B是对象A的一个成员，但因为B还被C引用，所以B在树中并不在A下面，而很可能是平级。
+
+为了纠正这点，MAT中点击右键，可以List objects中选择with outgoing references和with incoming references。这是个真正的引用图的概念，
+
+----
+outgoing references ：被该对象引用的对象。
+incoming references ：引用到该对象的对象。
+----
+
+==== 使用
+
+1. 产生Dump内存文件
+- map -dump:format=b,file=[fileName] [pid]
+
+2. Unreachable对象
+- Unreachable指的是可以被垃圾回收器回收的对象，但是由于没有GC发生，所以没有释放，这时抓的内存使用中的Unreachable就是这些对象。
+- Unreachable Object的对象其Retained Heap值都为0.这也是正常的。
+
+3. Histogram
+
+MAT中Histogram的主要作用是查看一个instance的数量，一般用来查看自己创建的类的实例的个数。
+
+- 可以很容易的找出占用内存最多的几个对象，根据Percentage（百分比）来排序。
+- 可以分不同维度来查看对象的Dominator Tree视图，Group by class、Group by class loader、Group by package
+和Histogram类似，时间久了，通过多次对比也可以把溢出对象找出来。
+- Dominator Tree和Histogram的区别是站的角度不一样，Histogram是站在类的角度上去看，Dominator Tree是站的对象实例的角度上看，Dominator Tree可以更方便的看出其引用关系。
+
+- 可以很容易的找出占用内存最多的几个对象，根据Percentage（百分比）来排序。
+可以分不同维度来查看对象的Dominator Tree视图，Group by class、Group by class loader、Group by package
+和Histogram类似，时间久了，通过多次对比也可以把溢出对象找出来。
+Dominator Tree和Histogram的区别是站的角度不一样，Histogram是站在类的角度上去看，Dominator Tree是站的对象实例的角度上看，Dominator Tree可以更方便的看出其引用关系。
+- Histogram group by package:通过查看Object的个数，结合代码就可以找出存在内存泄露的类（即可达但是无用的对象，或者是可以重用但是重新创建的对象）,Histogram中还可以对对象进行Group，更方便查看自己Package中的对象信息。
+
+4.常用选项
+
+- List objects -> with incoming references：查看这个对象持有的外部对象引用
+- List objects -> with outcoming references：查看这个对象被哪些外部对象引用
+- Path To GC Roots -> exclude all phantim/weak/soft etc. references：查看这个对象的GC Root，不包含虚、弱引用、软引用，剩下的就是强引用。从GC上说，除了强引用外，其他的引用在JVM需要的情况下是都可以 被GC掉的，如果一个对象始终无法被GC，就是因为强引用的存在，从而导致在GC的过程中一直得不到回收，因此就内存溢出了。
+- Path To GC Roots -> exclude weak/soft references：查看这个对象的GC Root，不含弱引用和软引用所有的引用.
+- Merge Shortest path to GC root ：找到从GC根节点到一个对象或一组对象的共同路径
+
