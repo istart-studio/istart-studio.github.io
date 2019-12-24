@@ -1,0 +1,78 @@
+---
+layout: post
+title: 分布式系统中的路由算法
+date: 2018-06-05 00:00:00 +0300
+description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
+img: software.jpg # Add image post (optional)
+tags: [分布式系统, 路由, 算法] # add tag
+---
+
+"图"的最短路径问题，路由是其一个实例。
+
+=== 路由算法
+
+决定数据包传输到目的地址的路由是由路由算法负责的——它由每个节点的一个网络层程序实现。
+
+活动：
+
+1. 必须决定数据包传递时的路径
+- 电路交换网络层（如X.25）和帧中继网络（如ATM），一旦建立虚拟电路或连接，路由就确定来。
+- 在包交换层（如IP）中，数据包的路由是单独指定的。
+- 此算法必须简单有效
+2. 必须通过监控流量和检测配置变化或故障来动态地更新网络的知识（开销信息、建立和维护路由表）
+- 计算量大
+- 时间可以慢
+
+路由是一段一段决定的：用本地信息决定下一步怎么走，本地信息依靠一个分发链路状态信息（负载和故障状态）的算法定期更新。
+
+==== 距离向量算法（distance vector）
+
+为 链路——状态算法（link-state）提供基础，link-state是互联网上的主要算法
+
+链路域：为发送到指定目的地的数据包指明了下一段链路。
+开销域：计算向量距离，或到达目的地的跳数。
+
+路由表：为每个可能的目的地单独设置一项，给出了数据包到达目的地而要采取的下一跳（hop）
+
+建立和维护路由表：
+
+- 每个路由表只能为每个路由指定一跳，路由信息的构建或修正就可以按分布的方式进行
+- 每个路由器使用RIP（路由信息协议，Router Information Protocol）发送自己路由表信息的概要和邻接节点相互交换网络信息。
+
+RIP动作：
+
+- 周期性地并且只要本地路由表发送变化，就将自己的路由表发送给邻接的素有可访问的路由器。（在每个没有故障的链路上发送一个包含路由表副本的RIP数据包。）
+- 当接收到这样的表时，
+1. 如果给出到达一个新目的地的路由，或已有一个目的地更好（开销更低）的路由，则用新的路由更新本地的路由表。
+2. 如果路由表是从链路n接收到的，并且表中给出的从链路n开始到达某地的开销和本地路由中的不相同，则用新的开销替换本地表中以后的开销。（新表是从和相关的目的地更近的路由器传来的，因此经过该路由器而言更加有权威性）
+
+RIP路由算法：
+Tl本地路由表
+Tr是从另一个路由器收到的表
+[source,java]
+----
+Send: Each t seconds or when Tl changes, send Tl on each non-faulty outgoing link.
+
+Receive: Whenever a routing table Tr is received on link n:
+
+for all rows Rr in Tr {
+if (Rr.link ≠ n) {
+    Rr.cast = Rr.cast + 1;
+    Rr.link = n;
+    if (Rr.destination is not in Tl) add Rr to Tl; // add new destination to Tl
+    else for all rows Rl in Tl {
+        if (Rr.destination = Rl.destination and (Rr.cost < Rl.cost or Rl.link = n)) Rl = Rr;
+            // Rr.cost < Rl.cost : remote node has better route 
+            // Rl.link = n : remote node is more authoritative，发送路由从n链路发送过来的。
+    }
+}
+
+----
+
+
+上述算法，已经被证明，无论何时网络发生变化，上面描述的步骤都能充分确保路由表收敛到到达每个目的地的最佳路由。
+互联网中t为30s。
+
+故障处理：
+每个路由器都监控着自己的链路并做以下工作：
+当检测到一条有故障的链路n时，将本地表中指向故障链路的所有项的考校都设为无穷大，并执行send动作。
