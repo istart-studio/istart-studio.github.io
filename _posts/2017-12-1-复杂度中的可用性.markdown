@@ -1,9 +1,9 @@
 ---
 layout: post
 title: 复杂度中的可用性
-date: 2017-11-31 00:00:00 +0800
+date: 2017-12-1 00:00:00 +0800
 description:  # Add post description (optional)
-img: software.jpg # Add image post (optional)
+img: # Add image post (optional)
 tags: [架构, 复杂度, 可用性] # add tag
 ---
 
