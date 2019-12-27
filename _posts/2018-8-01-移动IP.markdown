@@ -3,7 +3,7 @@ layout: post
 title: 移动IP
 date: 2018-08-01 00:00:00 +0300
 description:  # Add post description (optional)
-img: software.jpg # Add image post (optional)
+img: # Add image post (optional)
 tags: [分布式系统, 移动IP, 算法] # add tag
 ---
 
