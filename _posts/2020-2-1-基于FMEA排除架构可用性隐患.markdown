@@ -21,6 +21,8 @@ FMEA 是一种在各行各业都有广泛应用的可用性分析方法，
 再使用 FMEA 对这个架构进行分析，看看架构是否还存在某些可用性的隐患。
 所以，**FMEA是“事后控制”**。
 
+[FMEA工具的简单介绍](https://www.youtube.com/watch?v=PIEzR5uhqnw)
+
 # FMEA 方法
 
 在架构设计领域，FMEA 的具体分析方法是：
