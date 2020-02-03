@@ -1,0 +1,26 @@
+---
+layout: post
+title: 微服务
+date: 2020-02-04 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [架构, 微服务] # add tag
+---
+
+先放着大纲，趁宅在家，慢慢写
+
+# 发布和引用服务
+
+# 注册和发现服务
+
+# RPC远程服务调用
+
+# 监控微服务调用
+
+# 追踪微服务调用
+
+# 服务治理
+
+# 容器化
+
+# 微服务实现DevOps
