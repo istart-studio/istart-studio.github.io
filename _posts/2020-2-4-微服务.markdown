@@ -11,6 +11,108 @@ tags: [架构, 微服务] # add tag
 
 # 发布和引用服务
 
+服务提供者如何发布一个服务，服务消费者如何引用这个服务。
+
+最常见的服务发布和引用的方式有三种：
+
+## RESTful API
+
+可参考开源服务化框架[Motan](https://github.com/weibocom/motan)发布 RESTful API 的例子
+
+## XML 配置
+
+XML 配置这种方式的服务发布和引用主要分三个步骤：
+- 服务提供者定义接口，并实现接口。
+- 服务提供者进程启动时，通过加载 server.xml 配置文件将接口暴露出去。
+- 服务消费者进程启动时，通过加载 client.xml 配置文件来引入要调用的接口。
+
+## IDL（interface definition language） 文件
+通过一种中立的方式来描述接口，使得在不同的平台上运行的对象和不同语言编写的程序可以相互通信交流
+
+** IDL 主要是用作跨语言平台的服务之间的调用 **
+
+有两种最常用的 IDL：
+
+- 一个是 Facebook 开源的 Thrift 协议，
+- 另一个是 Google 开源的 gRPC 协议。
+
+无论是 Thrift 协议还是 gRPC 协议，它们的工作原理都是类似的。以gRPC为例：
+
+gRPC 协议使用 Protobuf 简称 proto 文件来定义接口名、调用参数以及返回值类型,
+再通过protoc来生成不同语言平台的客户端及服务端代码，从而具备**跨语言**服务调用能力。
+
+文件helloword.proto，定义了一个接口方法SayHello,请求参数HelloRequest,返回值HelloReply：
+
+```
+// The greeter service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}  
+```
+
+服务端代码：
+```java
+
+private class GreeterImpl extends GreeterGrpc.GreeterImplBase {
+
+  @Override
+  public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+    HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void sayHelloAgain(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+    HelloReply reply = HelloReply.newBuilder().setMessage("Hello again " + req.getName()).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+}
+```
+
+客户端代码：
+```java
+public void greet(String name) {
+  logger.info("Will try to greet " + name + " ...");
+  HelloRequest request = HelloRequest.newBuilder().setName(name).build();
+  HelloReply response;
+  try {
+    response = blockingStub.sayHello(request);
+  } catch (StatusRuntimeException e) {
+    logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    return;
+  }
+  logger.info("Greeting: " + response.getMessage());
+  try {
+    response = blockingStub.sayHelloAgain(request);
+  } catch (StatusRuntimeException e) {
+    logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    return;
+  }
+  logger.info("Greeting: " + response.getMessage());
+}  
+```
+
+| 服务方式 | 使用场景 | 缺点 |
+| -----| ---- | ---- |
+| RESTful API | 跨语言平台,组织内外皆可用，松耦合 | 使用HTTP作为通讯协议，相比TCP协议，性能较差 |
+| XML配置 | java平台，一般用作组织内部 | 不支持跨语言平台 |
+| IDL文件 | 跨语言平台,组织内外皆可用，性能佳 | 有一定的耦合性 |
+
 # 注册和发现服务
 
 # RPC远程服务调用
