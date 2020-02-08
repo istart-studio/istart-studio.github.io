@@ -4,7 +4,7 @@ title: 架构概览
 date: 2020-02-04 00:00:00 +0300
 description:  # Add post description (optional)
 img: # Add image post (optional)
-tags: [架构, 微服务] # add tag
+tags: [架构] # add tag
 ---
 
 先放着大纲，趁宅在家，慢慢写
