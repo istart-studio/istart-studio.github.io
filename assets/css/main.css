@@ -1061,6 +1061,36 @@ table tfoot td {
   background-color: #515151;
 }
 
+.contact .contact-wechat::before {
+  content: "";
+  display: block;
+  height: 2px;
+  width: -webkit-calc(30% - 48px);
+  width: calc(30% - 48px);
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  background-color: #515151;
+}
+
+.contact .contact-wechat::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: -webkit-calc(30% - 48px);
+  width: calc(30% - 48px);
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  background-color: #515151;
+}
+
 .contact ul {
   margin: 0;
   padding: 0;
