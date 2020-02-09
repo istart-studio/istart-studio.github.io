@@ -11,6 +11,8 @@ tags: [架构, 微服务] # add tag
 
 缺一个树状导图。
 
+![Spring Cloud 微服务架构]({{site.baseurl}}/asserts/img/post/Spring_Cloud_微服务架构.jpeg)
+
 # 发布和引用服务
 
 服务提供者如何发布一个服务，服务消费者如何引用这个服务。
