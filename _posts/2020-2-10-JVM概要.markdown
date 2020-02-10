@@ -1,0 +1,12 @@
+---
+layout: post
+title: JVM概要
+date: 2020-02-10 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [架构] # add tag
+---
+
+
+
+![JVM]({{site.baseurl}}/assets/img/post/JVM概要.png)
