@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 复杂度中的可用性
+title: 复杂度中的可扩展性
 date: 2017-12-2 00:00:00 +0800
 description:  # Add post description (optional)
 img: # Add image post (optional)

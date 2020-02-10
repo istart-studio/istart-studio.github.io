@@ -1,0 +1,354 @@
+---
+layout: post
+title: 微服务
+date: 2020-02-04 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [架构, 微服务] # add tag
+---
+
+先放着大纲，趁宅在家，慢慢写.
+
+缺一个树状导图。
+
+![Spring Cloud 微服务架构]({{site.baseurl}}/assets/img/post/Spring_Cloud_微服务架构.jpeg)
+
+# 发布和引用服务
+
+服务提供者如何发布一个服务，服务消费者如何引用这个服务。
+
+最常见的服务发布和引用的方式有三种：
+
+## RESTful API
+
+可参考开源服务化框架[Motan](https://github.com/weibocom/motan)发布 RESTful API 的例子
+
+## XML 配置
+
+XML 配置这种方式的服务发布和引用主要分三个步骤：
+- 服务提供者定义接口，并实现接口。
+- 服务提供者进程启动时，通过加载 server.xml 配置文件将接口暴露出去。
+- 服务消费者进程启动时，通过加载 client.xml 配置文件来引入要调用的接口。
+
+## IDL（interface definition language） 文件
+通过一种中立的方式来描述接口，使得在不同的平台上运行的对象和不同语言编写的程序可以相互通信交流
+
+** IDL 主要是用作跨语言平台的服务之间的调用 **
+
+有两种最常用的 IDL：
+
+- 一个是 Facebook 开源的 Thrift 协议，
+- 另一个是 Google 开源的 gRPC 协议。
+
+无论是 Thrift 协议还是 gRPC 协议，它们的工作原理都是类似的。以gRPC为例：
+
+gRPC 协议使用 Protobuf 简称 proto 文件来定义接口名、调用参数以及返回值类型,
+再通过protoc来生成不同语言平台的客户端及服务端代码，从而具备**跨语言**服务调用能力。
+
+文件helloword.proto，定义了一个接口方法SayHello,请求参数HelloRequest,返回值HelloReply：
+
+```
+// The greeter service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}  
+```
+
+服务端代码：
+```java
+
+private class GreeterImpl extends GreeterGrpc.GreeterImplBase {
+
+  @Override
+  public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+    HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void sayHelloAgain(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+    HelloReply reply = HelloReply.newBuilder().setMessage("Hello again " + req.getName()).build();
+    responseObserver.onNext(reply);
+    responseObserver.onCompleted();
+  }
+}
+```
+
+客户端代码：
+```java
+public void greet(String name) {
+  logger.info("Will try to greet " + name + " ...");
+  HelloRequest request = HelloRequest.newBuilder().setName(name).build();
+  HelloReply response;
+  try {
+    response = blockingStub.sayHello(request);
+  } catch (StatusRuntimeException e) {
+    logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    return;
+  }
+  logger.info("Greeting: " + response.getMessage());
+  try {
+    response = blockingStub.sayHelloAgain(request);
+  } catch (StatusRuntimeException e) {
+    logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+    return;
+  }
+  logger.info("Greeting: " + response.getMessage());
+}  
+```
+
+
+
+| 服务方式 | 使用场景 | 缺点 |
+| -----| ---- | ---- |
+| RESTful API | 跨语言平台,组织内外皆可用，松耦合 | 使用HTTP作为通讯协议，相比TCP协议，性能较差 |
+| XML配置 | java平台，一般用作组织内部 | 不支持跨语言平台 |
+| IDL文件 | 跨语言平台,组织内外皆可用，性能佳 | 有一定的耦合性 |
+
+---
+
+# 注册和发现服务
+
+服务提供者（RPC Server）、服务消费者（RPC Client）和服务注册中心（Registry）
+
+- RPC Server 提供服务，在启动时，根据服务发布文件 server.xml 中的配置的信息，向 Registry 注册自身服务，并向 Registry 定期发送心跳汇报存活状态。
+
+- RPC Client 调用服务，在启动时，根据服务引用文件 client.xml 中配置的信息，向 Registry 订阅服务，把 Registry 返回的服务节点列表缓存在本地内存中，并与 RPC Sever 建立连接。
+
+- 当 RPC Server 节点发生变更时，Registry 会同步变更，RPC Client 感知后会刷新本地内存中缓存的服务节点列表。
+RPC Client 从本地缓存的服务节点列表中，基于负载均衡算法选择一台 RPC Sever 发起调用。
+
+## 注册中心实现方式
+
+主要涉及几个问题：
+1. 注册中心需要提供哪些接口，该如何部署；
+2. 如何存储服务信息；
+3. 如何监控服务提供者节点的存活；
+4. 如果服务提供者节点有变化如何通知服务消费者，以及如何控制注册中心的访问权限。
+
+### 1.注册中心 API
+
+注册中心必须提供以下最基本的 API，例如：
+- 服务注册接口：服务提供者通过调用服务注册接口来完成服务注册。
+- 服务反注册接口：服务提供者通过调用服务反注册接口来完成服务注销。
+- 心跳汇报接口：服务提供者通过调用心跳汇报接口完成节点存活状态上报。
+- 服务订阅接口：服务消费者通过调用服务订阅接口完成服务订阅，获取可用的服务提供者节点列表。
+- 服务变更查询接口：服务消费者通过调用服务变更查询接口，获取最新的可用服务节点列表。
+
+除此之外，为了便于管理，注册中心还必须提供一些后台管理的 API，例如：
+- 服务查询接口：查询注册中心当前注册了哪些服务信息。
+- 服务修改接口：修改注册中心中某一服务的信息。
+
+### 2. 集群部署
+
+注册中心一般都是采用集群部署来保证高可用性，并通过分布式一致性协议来确保集群中不同节点之间的数据保持一致,像 zookeeper,
+当然，也可以按照可用性为优先级去实现，例如 euraka。后面会讲这两个的差别。
+
+
+
+## Eureka ZooKeeper
+
+CP :Zookeeper当master挂了，会在30-120s进行leader选举，这点类似于redis的哨兵机制，在选举期间Zookeeper是不可用的，这么长时间不能进行服务注册，是无法忍受的，别说30s，5s都不能忍受。
+这时Zookeeper集群会瘫痪，为了保持节点的一致性，牺牲了A/高可用。
+
+AP :即使Eureka有部分挂掉，还有其他节点可以使用的，他们保持平级的关系，但信息有可能不一致。
+
+---
+
+# RPC远程服务调用
+
+想要完成RPC调用，需要解决四个问题：
+
+- 客户端和服务端如何建立网络连接？
+- 服务端如何处理请求？
+- 数据传输采用什么协议？
+- 数据该如何序列化和反序列化？
+
+## 如何建立网络连接
+
+### Http
+
+### Socket
+
+## 服务端如何处理请求
+
+- 同步阻塞方式（BIO），客户端每发一次请求，服务端就生成一个线程去处理。
+当客户端同时发起的请求很多时，服务端需要创建很多的线程去处理每一个请求，如果达到了系统最大的线程数瓶颈，
+新来的请求就没法处理了。
+
+- 同步非阻塞方式 (NIO)，客户端每发一次请求，服务端并不是每次都创建一个新线程来处理，
+而是通过 I/O 多路复用技术进行处理。就是把多个 I/O 的阻塞复用到同一个 select 的阻塞上，
+从而使系统在单线程的情况下可以同时处理多个客户端请求。
+这种方式的优势是开销小，不用为每个请求创建一个线程，可以节省系统开销。参考 Netty框架。
+
+- 异步非阻塞方式（AIO），客户端只需要发起一个 I/O 操作然后立即返回，
+等 I/O 操作真正完成以后，客户端会得到 I/O 操作完成的通知，
+此时客户端只需要对数据进行处理就好了，不需要进行实际的 I/O 读写操作，
+因为真正的 I/O 读取或者写入操作已经由内核完成了。
+这种方式的优势是客户端无需等待，不存在阻塞等待问题。
+
+上述方式适用于不同的业务场景：
+
+- BIO 适用于连接数比较小的业务场景，这样的话不至于系统中没有可用线程去处理请求。这种方式写的程序也比较简单直观，易于理解。
+
+- NIO 适用于连接数比较多并且请求消耗比较轻的业务场景，比如聊天服务器。这种方式相比 BIO，相对来说编程比较复杂。
+
+- AIO 适用于连接数比较多而且请求消耗比较重的业务场景，比如涉及 I/O 操作的相册服务器。这种方式相比另外两种，编程难度最大，程序也不易于理解。
+
+## Netty 与 Mina
+
+## 序列化与反序列化
+
+常用的序列化方式分为两类：
+- 文本类如 XML/JSON 等
+- 二进制类如 PB/Thrift 等
+
+而具体采用哪种序列化方式，主要取决于三个方面的因素：
+
+- 支持数据结构类型的丰富度。
+
+- 跨语言支持。
+    
+- 性能。
+    一个是序列化后的压缩比，一个是序列化的速度。
+    
+    例如：PB 序列化的压缩比和速度都要比 JSON 序列化高很多，所以对性能和存储空间要求比较高的系统选用 PB 序列化更合适；而 JSON 序列化虽然性能要差一些，但可读性更好，更适合对外部提供服务。
+
+---
+
+# 监控微服务调用
+
+## 监控对象
+
+分为四个层次，由上到下可归纳为：
+
+- 用户端监控。通常是指业务直接对用户提供的功能的监控。
+例如：微博首页 Feed，它向用户提供了聚合关注的所有人的微博并按照时间顺序浏览的功能，对首页 Feed 功能的监控就属于用户端的监控。
+
+- 接口监控。通常是指业务提供的功能所依赖的具体 RPC 接口的监控。
+例如：微博首页 Feed，这个功能依赖于用户关注了哪些人的关系服务，每个人发过哪些微博的微博列表服务，以及每条微博具体内容是什么的内容服务，对这几个服务的调用情况的监控就属于接口监控。
+
+- 资源监控。通常是指某个接口依赖的资源的监控。
+例如：用户关注了哪些人的关系服务使用的是 Redis 来存储关注列表，对 Redis 的监控就属于资源监控。
+
+- 基础监控。通常是指对服务器本身的健康状况的监控。
+主要包括 CPU 利用率、内存使用量、I/O 读写量、网卡带宽等。
+对服务器的基本监控也是必不可少的，因为服务器本身的健康状况也是影响服务本身的一个重要因素，比如服务器本身连接的网络交换机上联带宽被打满，会影响所有部署在这台服务器上的业务。
+
+## 监控指标
+
+几个重点指标：
+
+- 请求量
+    - 实时请求量：QPS反映了服务调用的实时变化情况
+    - 统计请求量：一般用 PV（Page View）即一段时间内用户的访问量来衡量，比如一天的 PV 代表了服务一天的请求量，通常用来统计报表
+
+- 响应时间
+    
+    大多数情况下，可以用一段时间内所有调用的平均耗时来反映请求的响应时间。但它只代表了请求的平均快慢情况，有时候我们更关心慢请求的数量。
+    - 比如 0～10ms、10ms～50ms、50ms～100ms、100ms～500ms、500ms+ 这五个区间，其中 500ms 以上这个区间内的请求数就代表了慢请求量，正常情况下，这个区间内的请求数应该接近于 0；
+    - 还可以从 P90、P95、P99、P999 角度来监控请求的响应时间，比如 P99 = 500ms，意思是 99% 的请求响应时间在 500ms 以内，它代表了请求的服务质量，即 SLA。
+
+- 错误率
+
+    错误率的监控通常用一段时间内调用失败的次数占调用总次数的比率来衡量，比如对于接口的错误率一般用接口返回错误码为 503 的比率来表示。
+
+## 监控维度
+
+- 全局维度。
+    从整体角度监控对象的的请求量、平均耗时以及错误率，全局维度的监控一般是为了让你对监控对象的调用情况有个整体了解。
+    
+- 分机房维度。
+    一般为了业务的高可用性，服务通常部署在不止一个机房，因为不同机房地域的不同，同一个监控对象的各种指标可能会相差很大，所以需要深入到机房内部去了解。
+
+- 单机维度。
+    不通的设备性能是不一致的
+    
+- 时间维度。
+    不同时间段的性能不一样
+    
+- 核心维度。
+    核心业务和非核心业务在部署上必须隔离，分开监控，这样才能对核心业务做重点保障。
+
+## 监控系统原理
+
+监控系统主要包括四个环节：
+
+- 数据采集
+    - 服务主动上报
+    - 代理收集：这种处理方式通过服务调用后把调用的详细信息记录到本地日志文件中，然后再通过代理去解析本地日志文件，然后再上报服务的调用信息。
+
+- 数据传输
+    - 方式
+        - UDP 传输
+        - Kafka 传输
+    - 格式
+        - 文本。例如：json字符串。可读性好，占用传送宽带高，解析性能不高
+        - 二进制。例如：PB对象。可读性差，占用传输带宽低，解析性能高（序列化，反序列化）
+
+- 数据处理
+    
+    对收集来的原始数据进行聚合并存储。数据聚合通常有两个维度：
+
+    - 接口维度聚合，这个维度是把实时收到的数据按照接口名维度实时聚合在一起，这样就可以得到每个接口的实时请求量、平均耗时等信息。
+    - 机器维度聚合，这个维度是把实时收到的数据按照调用的节点维度聚合在一起，这样就可以从单机维度去查看每个接口的实时请求量、平均耗时等信息。
+    
+    持久化到数据库中存储，所选用的数据库一般分为两种：
+    
+    - 索引数据库，比如 Elasticsearch，以倒排索引的数据结构存储，需要查询的时候，根据索引来查询。
+    
+    - 时序数据库，比如 OpenTSDB，以时序序列数据的方式存储，查询的时候按照时序如 1min、5min 等维度来查询。
+
+- 数据展示
+
+    - 曲线图
+        监控变化趋势
+    - 饼状图
+        监控占比    
+    - 格子图
+        细粒度的监控
+---
+
+# 追踪微服务调用
+
+
+## 作用
+
+### 优化系统瓶颈
+
+### 优化链路调用
+
+### 生成网络拓扑
+
+### 透明传输数据
+
+
+---
+
+# 服务治理
+
+## Consul
+
+Consul是一个服务网格（微服务间的 TCP/IP，负责服务之间的网络调用、限流、熔断和监控）解决方案，
+它是一个一个分布式的，高度可用的系统，而且开发使用都很简便。
+它提供了一个功能齐全的控制平面，主要特点是：服务发现、健康检查、键值存储、安全服务通信、多数据中心。
+
+---
+
+# 容器化
+
+# 微服务实现DevOps
