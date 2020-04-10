@@ -42,7 +42,10 @@ DIP ）的另一个应用情景。也就是像业务实体这样的高层概念�
 
 在过去的几十年中，我们曾见证过一系列关于系统架构的想法被提出，列举如：
 
-• 六边形架构（ Hexagonal Architecture) （也称为端口与适配器架构， Ports and
-Adpaters）
-• DCI 架构 
-• BCE 架构 
+• 六边形架构（ Hexagonal Architecture) （也称为端口与适配器架构， Ports and Adpaters）：
+端口适配器、应用层与领域层。在这种架构中，系统通过适配器的方式与外部交互，将应用服务于领域服务封装在系统内部。
+• DCI 架构 ：
+DCI是数据Data 场景Context 交互Interactions的简称，DCI是一种特别关注行为的模式(可以对应GoF行为模式)，
+而MVC模式是一种结构性模式，MVC模式由于结构化，而可能忽视了行为事件。
+Javascript这种函数式functional语言能够帮助我们更加注重行为事件。
+• BCE 架构 ：
