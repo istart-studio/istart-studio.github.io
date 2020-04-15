@@ -53,3 +53,9 @@ Javascript这种函数式functional语言能够帮助我们更加注重行为事
 • BCE 架构 ：
 逻辑架构由四层模型（表示层、业务层、服务层、持久化层）构成
 
+## 23 展示器和谦卑对象 Presenters and Humble Objects
+
+在架构的边界处采用谦卑对象模式（Humble Object Principle）可增加整个系统的可测试性。
+什么是谦卑对象模式？就是把易于测试的行为和难以测试的行为分别对待。
+比如GUI很难测试，但是采用HOP后，可将其分为Presenter和View两类，
+View就是这里的谦卑对象很难测试，这样Presenter的行为可以充分测试，然后把简单的数据传递给View进行展示，没有复杂逻辑。
