@@ -1,0 +1,13 @@
+---
+layout: post
+title: K8S基础
+date: 2020-02-10 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [k8s,架构,原理] # add tag
+---
+
+# 流程
+- k8s 不直接管理容器，管理pod.
+- scheduler -> api server -> 存储信息，指令，数据 在etc -> kubelet 扫描 etc 获取相关指令，扫描相关请求 -> 发现请求 -> 执行在node请求
+
