@@ -11,3 +11,13 @@ tags: [k8s,架构,原理] # add tag
 - k8s 不直接管理容器，管理pod.
 - scheduler -> api server -> 存储信息，指令，数据 在etc -> kubelet 扫描 etc 获取相关指令，扫描相关请求 -> 发现请求 -> 执行在node请求
 
+- pod （核心）
+    - 一系列服务（容器）
+- ReplicaSet （副本控制器）
+    - 标签 
+        - 多选
+        - 单选
+    - 控制副本数量与预设的一致
+    -  ReplicaController
+        - 标签:单选
+        - 新版k8s推荐使用 ReplicaSet
