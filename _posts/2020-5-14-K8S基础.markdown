@@ -21,3 +21,16 @@ tags: [k8s,架构,原理] # add tag
     -  ReplicaController
         - 标签:单选
         - 新版k8s推荐使用 ReplicaSet
+- Deployment
+    - 滚动更新
+    - 新建RS，新建POD
+    - “无状态‘更新：
+        - 无实时 数据需要存储
+        - 将服务抽离集群后，再放置回去，集群服务可用。
+- StatefulSet
+    - 有“状态”更新：
+        - 有 实时 数据需要存储
+        - 将服务抽离集群后，再放置回去，集群服务不可用。
+    - 新建RS，新建POD（hostname不变）
+    - 靠POD中的hostname来关联实时状态数据
+    - 持久化数据依靠 PVC 文件系统
