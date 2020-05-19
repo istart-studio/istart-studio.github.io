@@ -46,14 +46,15 @@ tags: [k8s,架构,原理] # add tag
         - 为什么不能用nginx做负载均衡
             - pod 新建，IP会发生变化
 - service V_IP
+    - 一组相同的副本会创建一个service
     - POD IP
     - NODE IP
-    - Cluster IP k8s 抽象出来的service对象，service对象是一个V_IP的资源对象（一个进程）
+    - Cluster IP k8s 抽象出来的service对象，service对象是一个V_IP的资源对象（一个运行在物理机上的进程）
     - 通过 service 转发数据包给POD
-    - 怎么转发
+    - ingress-nginx 多个service之间的负载均衡
     - 转发流程
-        1. 物理界ip:port 收到请求，转发给 service ip 
-        2.  把请求给service后，通过（iptables，ipvs）做数据包的分发给POD
+        1. 物理机 ip:port 收到请求，转发给 service ip 
+        2. 把请求给service后，通过（iptables，ipvs）做数据包的分发给POD
     - POD SERVICE 
         - 都是进程，都不能对外提供服务
         - 可以互相通信，局域网通信
@@ -62,3 +63,17 @@ tags: [k8s,架构,原理] # add tag
         - pod 发生变化时， kube-proxy 会更新etc中的 endpoints
         - 不能跨组，只是一组相同的标签 
         - 不通的业务，有不通的service
+        
+# ip寻址
+- veth0 pod内部之间 通过localhost
+- cbr0（网桥）  pod 和 pod ，
+    - flannel 同一网段，通过网桥互通
+    - 不同网段 向上抛，通过路由寻址
+- eth0（物理网卡）
+- router 路由
+# 服务发现与注册
+- kube-proxy （服务发现）
+    - 每个节点都运行一个kube-proxy
+    - 监控pod，将pod的ip地址汇报给etcd里面的endpoints
+# yaml部署
+
