@@ -1,46 +1,54 @@
 ---
 layout: post
-title: JVM 参数
+title: JVM 相关
 date: 2016-12-10 00:00:00 +0300
 description: JVM参数 # Add post description (optional)
 img:  # Add image post (optional)
-tags: [Java, JVM] # add tag
+tags: [Java, JVM,调优,调试,原理] # add tag
 ---
-Heap：
+# 工具
+- jconsole:java自带图形化调试工具
+- 命令：jstack(查看线程)、jmap(查看内存)和jstat(性能分析)
 
-PSYoungGen：
+# 概要
+![JVM]({{site.baseurl}}/assets/img/post/JVM概要.png)
+
+
+# Heap：
+
+## PSYoungGen：
 
 - PS Eden Space：
 
-- 新的对象会先生成在Young area，也就是PSYoungGen中。
-- 新生代总大小为eden+from+to,与-Xmn相对应。例如：有个服务获取数据包，但是数据比较大，且需要并发读取，这时候新增对象会多。如果新生对象多到，新生代内存空间不够，则会转移到老生代。
-- from space：
-- to space:
+    - 新的对象会先生成在Young area，也就是PSYoungGen中。
+    - 新生代总大小为eden+from+to,与-Xmn相对应。例如：有个服务获取数据包，但是数据比较大，且需要并发读取，这时候新增对象会多。如果新生对象多到，新生代内存空间不够，则会转移到老生代。
+    - from space：
+    - to space:
 
-PS Survivor Space：救助空间。
+- PS Survivor Space：救助空间。
 
-- 增大救助空间就是调整-XX:SurvivorRatio参数，这个参数是Eden区和Survivor区的大小比值，默认是32，也就是说Eden区是 Survivor区的32倍大小，要注意Survivo是有两个区的，因此Surivivor其实占整个young genertation的1/34。调小这个参数将增大survivor区，让对象尽量在survitor区呆长一点，减少进入年老代的对象。
+    - 增大救助空间就是调整-XX:SurvivorRatio参数，这个参数是Eden区和Survivor区的大小比值，默认是32，也就是说Eden区是 Survivor区的32倍大小，要注意Survivo是有两个区的，因此Surivivor其实占整个young genertation的1/34。调小这个参数将增大survivor区，让对象尽量在survitor区呆长一点，减少进入年老代的对象。
+    
+    - 运行过程中survivor空间占比会自动根据应用运行调整，如果关闭了自适应调整策略（-XX:-UseAdaptiveSizePolicy），则XX:SurvivorRatio参数会成为survivor空间占比。计算survivor空间大小，依赖young的空间大小，计算公式S=Y/(R+2).
+    - -XX:SurvivorRatio=ratio ,eden区和survivor区的比例。默认是8。
+    
+    - -XX:NewSize=size 
+    设置初始的年轻代的大小。年轻代是分配新对象的地方，是 GC经常发生的地方。设置太低，会频繁minor GC，设置太高的话就只会发生Full GC了。Oracle推荐设置为整体内存的一半或者1/4。该参数等价于-Xmn。
 
-- 运行过程中survivor空间占比会自动根据应用运行调整，如果关闭了自适应调整策略（-XX:-UseAdaptiveSizePolicy），则XX:SurvivorRatio参数会成为survivor空间占比。计算survivor空间大小，依赖young的空间大小，计算公式S=Y/(R+2).
-- -XX:SurvivorRatio=ratio ,eden区和survivor区的比例。默认是8。
+- PS Old Gen： Metaspace( 8.0+，PermGen的替代者)：
 
-- -XX:NewSize=size 
-设置初始的年轻代的大小。年轻代是分配新对象的地方，是 GC经常发生的地方。设置太低，会频繁minor GC，设置太高的话就只会发生Full GC了。Oracle推荐设置为整体内存的一半或者1/4。该参数等价于-Xmn。
-
-PS Old Gen： Metaspace( 8.0+，PermGen的替代者)：
-
--默认情况下，类元数据只受可用的本地内存限制（容量取决于是32位或是64位操作系统的可用虚拟内存大小）。
-
--新参数（MaxMetaspaceSize）用于限制本地内存分配给类元数据的大小。如果没有指定这个参数，元空间会在运行时根据需要动态调整。
-
-
+    -默认情况下，类元数据只受可用的本地内存限制（容量取决于是32位或是64位操作系统的可用虚拟内存大小）。
+    
+    -新参数（MaxMetaspaceSize）用于限制本地内存分配给类元数据的大小。如果没有指定这个参数，元空间会在运行时根据需要动态调整。
 
 
 
-GC过程中都会占停正在运行的进程
 
 
-.GC（HotSpot）种类
+# GC过程中都会占停正在运行的进程
+
+
+## .GC（HotSpot）种类
 [width="100%",options="header,footer"]
 |====================
 | 类别 | serial collector | parallel collector（throughput collector） | concurrent collector
