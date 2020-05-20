@@ -1,0 +1,14 @@
+---
+layout: post
+title: Mysql优化
+date: 2020-02-10 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [mysql,优化] # add tag
+---
+
+# 三板斧
+- 慢查询日志
+    - 分场景开
+- explain执行计划
+- show profile

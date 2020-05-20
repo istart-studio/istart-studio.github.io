@@ -10,4 +10,70 @@ tags: [k8s,架构,原理] # add tag
 # 流程
 - k8s 不直接管理容器，管理pod.
 - scheduler -> api server -> 存储信息，指令，数据 在etc -> kubelet 扫描 etc 获取相关指令，扫描相关请求 -> 发现请求 -> 执行在node请求
+# 核心组件
+- pod （核心）
+    - 一系列服务（容器）
+    - pad内容器通过localhost互相访问
+    - pad有自己独立的IP
+- ReplicaSet （副本控制器）
+    - 标签 
+        - 多选
+        - 单选
+    - 控制副本数量与预设的一致
+    -  ReplicaController
+        - 标签:单选
+        - 新版k8s推荐使用 ReplicaSet
+- Deployment
+    - 滚动更新
+    - 新建RS，新建POD
+    - “无状态‘更新：
+        - 无实时 数据需要存储
+        - 将服务抽离集群后，再放置回去，集群服务可用。
+- StatefulSet
+    - 有“状态”更新：
+        - 有 实时 数据需要存储
+        - 将服务抽离集群后，再放置回去，集群服务不可用。
+    - 新建RS，新建POD（hostname不变）
+    - 靠POD中的hostname来关联实时状态数据
+    - 持久化数据依靠 PVC 文件系统
+# 服务注册与发现
+- pod
+    - 对外部提供访问
+        - 绑定物理机的端口与POD端口进行映射
+    - 对内部提供访问
+        - localhost
+    - 负载均衡
+        - 为什么不能用nginx做负载均衡
+            - pod 新建，IP会发生变化
+- service V_IP
+    - 一组相同的副本会创建一个service
+    - POD IP
+    - NODE IP
+    - Cluster IP k8s 抽象出来的service对象，service对象是一个V_IP的资源对象（一个运行在物理机上的进程）
+    - 通过 service 转发数据包给POD
+    - ingress-nginx 多个service之间的负载均衡
+    - 转发流程
+        1. 物理机 ip:port 收到请求，转发给 service ip 
+        2. 把请求给service后，通过（iptables，ipvs）做数据包的分发给POD
+    - POD SERVICE 
+        - 都是进程，都不能对外提供服务
+        - 可以互相通信，局域网通信
+        - 通过标签选择器进行关联
+        - 关联完毕，后将POD IP 进行关联保存之 endpoints
+        - pod 发生变化时， kube-proxy 会更新etc中的 endpoints
+        - 不能跨组，只是一组相同的标签 
+        - 不通的业务，有不通的service
+        
+# ip寻址
+- veth0 pod内部之间 通过localhost
+- cbr0（网桥）  pod 和 pod ，
+    - flannel 同一网段，通过网桥互通
+    - 不同网段 向上抛，通过路由寻址
+- eth0（物理网卡）
+- router 路由
+# 服务发现与注册
+- kube-proxy （服务发现）
+    - 每个节点都运行一个kube-proxy
+    - 监控pod，将pod的ip地址汇报给etcd里面的endpoints
+# yaml部署
 
