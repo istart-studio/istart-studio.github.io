@@ -12,3 +12,7 @@ tags: [mysql,优化] # add tag
     - 分场景开
 - explain执行计划
 - show profile
+
+# 表与索引的存储方式
+
+#
