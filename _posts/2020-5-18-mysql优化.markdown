@@ -14,5 +14,6 @@ tags: [mysql,优化] # add tag
 - show profile
 
 # 表与索引的存储方式
+B+Tree，高度及广度带来的问题。这个单独写篇文章进行描述。
 
 #
