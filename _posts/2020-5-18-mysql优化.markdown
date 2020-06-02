@@ -10,6 +10,7 @@ tags: [mysql,优化] # add tag
 # 三板斧
 - 慢查询日志
     - 分场景开启，一般在自测，内测前开启
+    - 生产环境不建议开启
 - explain执行计划
 - show profile
 
