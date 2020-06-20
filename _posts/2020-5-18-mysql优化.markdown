@@ -17,4 +17,67 @@ tags: [mysql,优化] # add tag
 # 表与索引的存储方式
 B+Tree，高度及广度带来的问题。这个单独写篇文章进行描述。
 
-#
+# 前缀索引。eg： like ‘%xxx%’  like '_xxx%'
+```
+现在有个user表，列 family_name varchar(50) 保存的是英文姓氏（我也想用中文姓名来举例，但是不大适合，看下去就明白了。。。）
+要取得设置前缀索引最理想的"prefix_length"，我们首先要取得整列的选择性，如下：
+
+SELECT COUNT(DISTINCT family_name)/COUNT(*) FROM user;
+假设这里得到值是0.188。
+然后我们继续去看看该列前1个字符的选择性又是多少
+
+SELECT COUNT(DISTINCT LEFT(family_name,1))/COUNT(*) FROM user;
+假设这里得到的结果是0.532，和整列的选择性出入太大，不可取，继续：
+
+SELECT COUNT(DISTINCT LEFT(family_name,2))/COUNT(*) FROM user;
+SELECT COUNT(DISTINCT LEFT(family_name,3))/COUNT(*) FROM user;
+...
+假设直接到“prefix_length”为5时，得到的值为0.189，非常接近！
+而取6时得到的值为0.18891，这个选择性和5并没有太大的偏差。
+再结合减少索引文件大小的这个思路
+“prefix_length”值设置为5才是此处设置前缀索引的最优方案！
+选择性讲完，还得再讲清楚这个前缀索引该怎么用！
+书接上面的栗子~
+正确的用法如下：
+
+SELECT * FROM user WHERE family_name LIKE "lee%";
+SELECT * FROM user WHERE family_name LIKE "david%";
+以下则用不上该索引：
+
+SELECT * FROM user WHERE family_name LIKE "_ee%";
+SELECT * FROM user WHERE family_name LIKE "%en%";
+SELECT * FROM user WHERE family_name LIKE "%ar%";
+注意：SQL的模式缺省是忽略大小写的！
+另外，“_”代表一个字符，“%”代表任意多个字符
+```
+
+# trace 工具
+
+mysql最终是否选择走索引或者一张表涉及多个索引， mysql最终如何选择索引，可以通过trace工具来一查究竟，开启trace工具会影响mysql性能，所以只能临时分析sql使用，用完之后需要立即关闭。
+
+```
+SET SESSION optimizer_trace="enabled=on",end_markers_in_json=on; --开启trace
+SELECT * FROM employees WHERE name > 'a' ORDER BY position;
+SELECT * FROM information_schema.OPTIMIZER_TRACE;
+```
+
+```
+"join_preparation": { --第一阶段：SQl准备阶段
+"condition_processing": { --条件处理
+
+table_scan": { --全表扫描情况
+     "rows": 3, --扫描行数
+     "cost": 3.7 --查询成本
+ "potential_range_indices": [ --查询可能使用的索引
+"analyzing_range_alternatives": { ‐‐分析各个索引使用成本
+ "index_only": false, ‐‐是否使用覆盖索引
+      "rows": 3, --‐‐索引扫描行数
+      "cost": 4.61, --索引使用成本
+      "chosen": false, ‐‐是否选择该索引
+```
+
+```
+SET SESSION optimizer_trace="enabled=off"; -- 关闭trace
+```
+
+
