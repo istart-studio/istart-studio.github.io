@@ -80,4 +80,16 @@ table_scan": { --全表扫描情况
 SET SESSION optimizer_trace="enabled=off"; -- 关闭trace
 ```
 
+# Join
 
+## MySQL是只支持一种JOIN算法Nested-Loop Join（嵌套循环链接）
+
+不像其他商业数据库可以支持哈希链接和合并连接，
+不过MySQL的Nested-Loop Join（嵌套循环链接）也是有很多变种，
+能够帮助MySQL更高效的执行JOIN操作：
+
+### Simple Nested-Loop Join
+
+row scan -> r1 -> match (s1,s2,s3,sN) -> r2 -> (...) -> rN
+
+从驱动表中取出R1匹配S表所有列，然后R2，R3,直到将R表中的所有数据匹配完，然后合并数据，可以看到这种算法要对S表进行rN * sN 次访问，虽然简单，但是相对来说开销还是太大了
