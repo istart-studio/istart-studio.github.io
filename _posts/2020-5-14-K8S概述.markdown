@@ -1,0 +1,8 @@
+---
+layout: post
+title: K8S概述
+date: 2020-02-10 00:00:00 +0300
+description:  # Add post description (optional)
+img: # Add image post (optional)
+tags: [k8s,架构,原理] # add tag
+---
