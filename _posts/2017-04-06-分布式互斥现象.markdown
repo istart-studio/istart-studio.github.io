@@ -4,7 +4,7 @@ title: 分布式互斥
 date: 2017-04-06 00:00:00 +0300
 description: 分布式互斥现象研究 # Add post description (optional)
 img: # Add image post (optional)
-tags: [Js, Conference] # add tag
+tags: [分布式,算法] # add tag
 ---
 
 ## 要点
