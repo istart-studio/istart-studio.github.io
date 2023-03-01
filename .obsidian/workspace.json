@@ -1,0 +1,174 @@
+{
+  "main": {
+    "id": "fa96378b35634fa5",
+    "type": "split",
+    "children": [
+      {
+        "id": "b42e33d366d3563b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7de79fc531e934fd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "409877671f03c35a",
+    "type": "split",
+    "children": [
+      {
+        "id": "31cff89c53fbd78e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "324de41def128043",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6971c104feeba798",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "12ebc8907d260d83",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 394.5
+  },
+  "right": {
+    "id": "feb360bc97390477",
+    "type": "split",
+    "children": [
+      {
+        "id": "8153092b0209af48",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9faebce4922d9d3d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "540453aa3383a940",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "fd1e4b9ad3fdfc06",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c020caf604a50189",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "_posts/2020-08-28-Linux性能分析.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "7de79fc531e934fd",
+  "lastOpenFiles": [
+    "assets/img/8-28-Linux性能分析/image-20200828220500756.png",
+    "_posts/2020-08-28-Linux性能分析.md",
+    "assets/img/Pasted image 20230302001750.png",
+    "assets/img/Pasted image 20230302001738.png",
+    "assets/img/Pasted image 20230302001729.png",
+    "_posts/2020-08-25-istio.md",
+    "assets/img/8-28-Linux性能分析/1398476-20180816160717376-2032689702.png",
+    "assets/img/8-28-Linux性能分析/vectorloadavg.png",
+    "assets/img/8-28-Linux性能分析/image-20200829205938645.png",
+    "assets/img/8-28-Linux性能分析/image-20200829174413443.png",
+    "assets/img/8-28-Linux性能分析/image-20200829174347765.png",
+    "assets/img/8-28-Linux性能分析/image-20200829174331919.png",
+    "assets/img/8-28-Linux性能分析/image-20200829174318030.png",
+    "_posts/2020-08-22-service_mesh.md",
+    "_posts/assets/img",
+    "_posts/assets",
+    "8-25-istio.assets/image-20200827165725836.png.md",
+    "8-28-Linux性能分析.assets/image-20200828220500756.png.md",
+    "8-25-istio.assets",
+    "8-28-Linux性能分析.assets",
+    "_posts/2020-07-28-K8S-基础.md",
+    "_posts/2016-03-27-JVM.md"
+  ]
+}

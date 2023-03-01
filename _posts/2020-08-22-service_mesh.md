@@ -105,8 +105,10 @@ See our post [“Should I use a service mesh?”](https://glasnostic.com/blog/sh
 
 Istio和Linkerd都支持通过流行的[sidecar模式](https://glasnostic.com/blog/microservices-architecture-patterns-servicmes-glossary # sidecar)进行部署，该模式为每个微服务分配一个单独的代理。微服务不是直接调用其他服务，而是连接到它们的本地代理。然后，该代理将调用路由到适当的服务实例的代理，该代理将调用传递到其本地微服务。这个服务代理的网格形成了[数据平面](https://glasnostic.com/blog/microservices-architecing-patterns-servicmes-glossary # data - plane)。在一个服务网格中，数据平面由一个[控制平面](https://glasnostic.com/blog/microservices-architecture-patterns-servicmes-glossary # control - plane)配置和监控，它通常是单独部署的。
 
-![Architecture diagram](../assets/img/8-22-service_mesh/istio-sidecar-deployment-2f3a976017.png)
+![[Pasted image 20230302000614.png]]
 
+![[Pasted image 20230302000441.png]]
+![[Pasted image 20230301235656.png]]
 例如Istio部署。Envoy代理被部署为边车。在这个部署模型中，代理被注入到每个容器工作负载中。因此，可以为每个工作负载分别配置代理。Istio控制平面由用于配置、度量、控制和保护各种服务到服务连接的组件组成。
 
 
