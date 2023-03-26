@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "b42e33d366d3563b",
+        "id": "83bedbb37c2a897a",
         "type": "tabs",
         "children": [
           {
-            "id": "7de79fc531e934fd",
+            "id": "e886f676ca7440db",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "file": "_posts/2023-3-9 性能之巅.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "file": "_posts/2023-3-9 性能之巅.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_posts/2020-08-28-Linux性能分析.md",
+                "file": "_posts/2023-3-9 性能之巅.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,16 +125,16 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_posts/2020-08-28-Linux性能分析.md"
+                "file": "_posts/2023-3-9 性能之巅.md"
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 530.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -146,10 +146,18 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "7de79fc531e934fd",
+  "active": "e886f676ca7440db",
   "lastOpenFiles": [
-    "assets/img/8-28-Linux性能分析/image-20200828220500756.png",
+    "2023-03-26.md",
+    "未命名.canvas",
+    "_posts/2020-07-28-K8S-基础.md",
+    "_posts/2020-07-31-k8s-进阶.md",
     "_posts/2020-08-28-Linux性能分析.md",
+    "未命名 1.canvas",
+    "_posts/2023-3-9 性能之巅.md",
+    "_posts/未命名.md",
+    "_posts/2020-09-21-架构思想.md",
+    "assets/img/8-28-Linux性能分析/image-20200828220500756.png",
     "assets/img/Pasted image 20230302001750.png",
     "assets/img/Pasted image 20230302001738.png",
     "assets/img/Pasted image 20230302001729.png",
@@ -160,7 +168,6 @@
     "assets/img/8-28-Linux性能分析/image-20200829174413443.png",
     "assets/img/8-28-Linux性能分析/image-20200829174347765.png",
     "assets/img/8-28-Linux性能分析/image-20200829174331919.png",
-    "assets/img/8-28-Linux性能分析/image-20200829174318030.png",
     "_posts/2020-08-22-service_mesh.md",
     "_posts/assets/img",
     "_posts/assets",
@@ -168,7 +175,6 @@
     "8-28-Linux性能分析.assets/image-20200828220500756.png.md",
     "8-25-istio.assets",
     "8-28-Linux性能分析.assets",
-    "_posts/2020-07-28-K8S-基础.md",
     "_posts/2016-03-27-JVM.md"
   ]
 }
