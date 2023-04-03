@@ -135,7 +135,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 530.5
+    "width": 246.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -147,7 +147,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "e886f676ca7440db",
+  "active": "c020caf604a50189",
   "lastOpenFiles": [
     "_posts/性能之巅.drawio",
     "_posts/2023-3-28 测试.md",
