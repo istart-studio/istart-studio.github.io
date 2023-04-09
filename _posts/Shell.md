@@ -50,13 +50,13 @@ fgrep（与 grep -F 相同）是固定的或快速的 grep，其行为与 grep �
 
 例如，如果我想在 .bash_profile 中搜索文字点 (.)，那么使用 grep 会很困难，因为我必须转义点，因为点是一个元字符，表示“通配符，任何单个字符”：
 
-```
+```bash
 grep "." myfile.txt
 ```
 
 上面的命令返回 myfile.txt 的每一行。改为这样做：
 
-```
+```bash
 fgrep "." myfile.txt
 ```
 
@@ -68,7 +68,7 @@ pgrep 是一个首字母缩写词，代表“Process-ID Global Regular Expressio
 
 pgrep 查看当前正在运行的进程并将与选择条件匹配的进程 ID 列出到标准输出。当您只想知道进程的进程 ID 整数时，pgrep 很方便。`pgrep mysql`例如，如果我只想知道我的 mysql 进程的进程 ID，我会使用返回进程 ID 的 命令，如 7312
 
-```shell
+```bash
 
 pgrep -f "lcltc"
 
@@ -112,3 +112,45 @@ echo '已启动'
 journalctl -f -u logstash
 
 ```
+
+# TCPDUMP
+
+yum -y install tcpdump
+
+```bash
+### 可用的网卡
+tcpdump -D
+
+### 监听特定主机
+# 例子：监听本机跟主机`182.254.38.55`之间往来的通信包。
+# 备注：出、入的包都会被监听。
+tcpdump host 182.254.38.55
+
+### 特定来源、目标地址的通信
+# 特定来源
+tcpdump src host hostname
+# 特定目标地址
+tcpdump host hostname
+
+### Show the HTTPs Traffic
+
+tcpdump -nnSX port 443
+
+
+
+```
+
+
+```bash
+tcpdump -ni eth0 -ttt
+```
+
+-ttt 输出所包含的DELTA时间，测量了包和包之间的时间。
+
+# SYS-STATE
+
+yum -y install sysstate
+
+
+## netstat
+
