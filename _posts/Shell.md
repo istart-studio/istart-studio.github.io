@@ -1,4 +1,3 @@
-
 ## grep
 
 grep 是代表“全局正则表达式打印”的首字母缩写词。grep 是一个程序，它逐行扫描一个或多个指定文件，返回包含模式的行。模式是一种表达式，它通过将字符解释为元字符来指定一组字符串。例如，星号元字符 (*) 被解释为“零个或多个前面的元素”。这使用户能够在 grep 命令中键入一小段字符和元字符，让计算机向我们显示文件匹配的行。
@@ -74,7 +73,6 @@ pgrep -f "lcltc"
 
 ```
 
-
 ```shell
 #!/bin/sh  
 #!/bin/bash  
@@ -105,7 +103,6 @@ echo "JAR包：${install_dir}/${jar_file_name}"
 java -Xms512m -Xmx2048m -jar -Dfile.encoding=utf-8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="${install_dir}" "${install_dir}/${jar_file_name}" --spring.main.allow-bean-definition-overriding=true --sms.platform.key:ALI_CLOUD > /dev/null &  
 echo '已启动'
 ```
-
 
 ```Shell
 
@@ -140,7 +137,6 @@ tcpdump -nnSX port 443
 
 ```
 
-
 ```bash
 tcpdump -ni eth0 -ttt
 ```
@@ -151,6 +147,31 @@ tcpdump -ni eth0 -ttt
 
 yum -y install sysstate
 
-
 ## netstat
 
+
+# WHEREIS
+
+```bash
+whereis [OPTIONS] FILE_NAME...
+
+```
+
+
+在没有任何选项的情况下使用时，在`whereis`二进制文件、源文件和手册文件中搜索指定为参数的命令。
+
+默认情况下，在环境变量`whereis`中列出的硬编码路径和目录中搜索命令的文件 。使用该选项查找命令搜索的目录。[](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/)`-l``whereis`
+
+
+# PS
+
+
+# | GREP
+
+
+# DU
+
+
+```bash
+ du -lh --max-depth=1
+```
