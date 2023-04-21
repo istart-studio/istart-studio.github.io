@@ -149,7 +149,6 @@ yum -y install sysstate
 
 ## netstat
 
-
 # WHEREIS
 
 ```bash
@@ -157,21 +156,100 @@ whereis [OPTIONS] FILE_NAME...
 
 ```
 
-
 在没有任何选项的情况下使用时，在`whereis`二进制文件、源文件和手册文件中搜索指定为参数的命令。
 
 默认情况下，在环境变量`whereis`中列出的硬编码路径和目录中搜索命令的文件 。使用该选项查找命令搜索的目录。[](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/)`-l``whereis`
 
-
 # PS
-
 
 # | GREP
 
-
 # DU
-
 
 ```bash
  du -lh --max-depth=1
+```
+
+# FDISK 
+
+```bash
+[root@localhost ~]# fdisk  -l
+
+磁盘 /dev/sda：214.7 GB, 214748364800 字节，419430400 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 4096 字节
+I/O 大小(最小/最佳)：4096 字节 / 4096 字节
+磁盘标签类型：dos
+磁盘标识符：0x000c0d89
+
+   设备 Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   104857599    51379200   8e  Linux LVM
+/dev/sda3       104857600   419430399   157286400   8e  Linux LVM
+
+磁盘 /dev/mapper/centos_localhost-root：211.5 GB, 211514556416 字节，413114368 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 4096 字节
+I/O 大小(最小/最佳)：4096 字节 / 4096 字节
+
+
+磁盘 /dev/mapper/centos_localhost-swap：2147 MB, 2147483648 字节，4194304 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 4096 字节
+I/O 大小(最小/最佳)：4096 字节 / 4096 字节
+```
+
+```bash
+[root@localhost ~]# fdisk /dev/sda
+
+输入 P
+
+磁盘 /dev/sda：64.4 GB, 64424509440 字节，125829120 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 4096 字节
+I/O 大小(最小/最佳)：4096 字节 / 4096 字节
+磁盘标签类型：gpt
+Disk identifier: E6BE8ED6-EC6F-4209-89A0-207377F7C988
+
+
+#         Start          End    Size  Type            Name
+1         2048       411647    200M  EFI System      EFI System Partition
+2       411648      2508799      1G  Microsoft basic
+3      2508800    125827071   58.8G  Linux LVM
+```
+
+```text
+
+```
+
+
+```bash
+
+
+
+
+# 查看已分区数量（我看到有两个 /dev/sda1 /dev/sda2）
+输入 n　　　　　　　
+# 新增加一个分区
+输入 p　　　　　　　
+# 分区类型我们选择为主分区
+分区号输入 3
+# （因为1,2已经用过了,sda1是分区1,sda2是分区2,sda3分区3）,确认输入回车　　　　　 
+默认（起始扇区） 输入 回车　　　　　 
+默认（结束扇区） 
+# t 修改分区类型
+# 选分区3 
+输入 8e
+# 修改为LVM（8e就是LVM） w　　　　　 　
+写分区 输入 q 完成，退出fdisk命令 
+
+使用partprobe命令 或者重启机器
+
+进入lvm，通过vgdisplay查看组名：为centos_localhost
+
+lvm　　　　　　　　　　　　 #进入lvm管理 lvm>pvcreate /dev/sda3　　 #这是初始化刚才的分区3 lvm>vgextend centos_localhost /dev/sda3 #将初始化过的分区加入到虚拟卷组centos (卷和卷组的命令可以通过 vgdisplay ) lvm>vgdisplay -v或者vgdisplay查看free PE /Site lvm>lvextend -l+38399 /dev/centos_localhost/root　　#扩展已有卷的容量（2559 是通过vgdisplay查看free PE /Site的大小） lvm>pvdisplay #查看卷容量 lvm>quit 　#退出
+
+xfs_growfs /dev/centos_localhost/root 扩容
+
+df -hl
 ```
