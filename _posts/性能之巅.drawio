@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-04-21T09:18:52.674Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" etag="2G7c_XK3gNoQfOVnu3Xw" version="21.1.2" type="device" pages="13">
+<mxfile host="Electron" modified="2023-04-25T06:37:52.340Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" etag="umPUy4gQ-ilK33S-r4Hi" version="21.1.2" type="device" pages="13">
   <diagram name="1.3 事情" id="CpMYe5FQRm6xeQbsLVcK">
     <mxGraphModel dx="2894" dy="1174" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -858,7 +858,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-8" value="线性" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="60" y="570" width="60" height="30" as="geometry" />
+          <mxGeometry x="59" y="430" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-9" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -882,7 +882,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-12" value="竞争" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="220" y="570" width="60" height="30" as="geometry" />
+          <mxGeometry x="219" y="430" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-13" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -903,7 +903,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-17" value="一致性" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="380" y="570" width="60" height="30" as="geometry" />
+          <mxGeometry x="379" y="430" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-18" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -976,10 +976,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-39" value="拐点" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="550" y="570" width="60" height="30" as="geometry" />
+          <mxGeometry x="549" y="430" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="yYRgYNyugfiuIAluqz9k-40" value="上限" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="710" y="570" width="60" height="30" as="geometry" />
+          <mxGeometry x="709" y="430" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="yYRgYNyugfiuIAluqz9k-41" value="X: 扩展的维度 Y: 相应的性能（吞吐量、每秒事务数等）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="580" width="380" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
