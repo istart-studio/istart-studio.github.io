@@ -164,6 +164,16 @@ whereis [OPTIONS] FILE_NAME...
 
 # | GREP
 
+```bash
+cat logs/log_info.log |grep -C2 "375c0b933d3741f18d4da0725c1f460e"
+```
+
+# TAIL
+
+```bash
+tail -f log_error.log
+```
+
 # DU
 
 ```bash
