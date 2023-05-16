@@ -249,17 +249,19 @@ AQS 还提供了一些辅助方法，比如 acquire()、release()、tryAcquireNa
   <summary>Java 中如何进行多线程调试？请介绍一下常用的调试工具。</summary>
   <p>
 
-AQS（AbstractQueuedSynchronizer）是一个用于实现同步器的抽象类，是 Java 并发包中实现锁和其他同步器的基础。它采用了一种“先进先出”的等待队列，提供了可重入锁和条件等待的基本框架，是实现同步器的基础框架。
+在 Java 中进行多线程调试可以使用以下常用的调试工具：
 
-AQS 的实现采用了模板方法设计模式，它将同步器的关键逻辑封装在了几个 protected 方法中，同时提供了公开的 API 接口供子类实现。AQS 提供了两种锁的实现方式：独占锁和共享锁。
+1. IDE 调试工具：Eclipse、IntelliJ IDEA 等主流的 Java IDE 都支持调试多线程程序。可以在调试时设置断点、单步执行、观察变量等操作。
 
-Java 并发包中的 ReentrantLock、ReentrantReadWriteLock、CountDownLatch、Semaphore 等同步器都是基于 AQS 实现的。AQS 可以让我们很方便地实现各种锁和同步器，而且可以基于 AQS 实现自己的同步器。
+2. jstack 命令：可以用 jstack 命令来查看线程状态、锁信息、栈跟踪等信息，以帮助发现问题。
 
-AQS 通过一个 volatile 类型的 int 变量 state 来表示同步状态，同时采用了一种非公平的、先进先出的等待队列来管理等待线程。在实现独占锁和共享锁时，需要分别实现 tryAcquire() 和 tryRelease() 方法，这些方法需要被子类实现以提供特定的锁语义。
+3. jconsole 工具：可以使用 jconsole 工具来监控 Java 进程的各种状态，包括线程数、线程状态、CPU 占用率等。
 
-AQS 还提供了一些辅助方法，比如 acquire()、release()、tryAcquireNanos()、tryReleaseShared() 等，它们是对 tryAcquire() 和 tryRelease() 方法的封装，可以更方便地使用同步器。
+4. VisualVM 工具：VisualVM 是一个功能强大的 Java 监控和分析工具，可以用来检测线程的死锁、CPU 占用等问题，并提供了一系列的分析工具帮助定位问题。
 
-总之，AQS 是 Java 并发包中实现同步器的基础框架，提供了可重入锁和条件等待的基本框架，同时支持自定义同步器的实现，是实现高性能、高可靠性并发程序的重要基础。
+5. Profiler 工具：Profiler 工具可以帮助我们分析代码性能，并且可以定位代码中的瓶颈和问题，帮助我们优化程序性能。
+
+使用这些工具可以帮助我们快速地发现和定位多线程程序中的问题，提高程序的可靠性和性能。
 </p>
 </details>
 
