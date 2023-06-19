@@ -104,9 +104,12 @@ java -Xms512m -Xmx2048m -jar -Dfile.encoding=utf-8 -XX:+HeapDumpOnOutOfMemoryErr
 echo '已启动'
 ```
 
+# journalctl
 ```Shell
 
 journalctl -f -u logstash
+
+journalctl --unit logstash --since  "2023-06-19 09:18:16"
 
 ```
 
@@ -263,3 +266,4 @@ xfs_growfs /dev/centos_localhost/root 扩容
 
 df -hl
 ```
+
