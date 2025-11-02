@@ -11,14 +11,11 @@
             "id": "e886f676ca7440db",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "未命名.canvas",
-                "viewState": {
-                  "x": 0,
-                  "y": 0,
-                  "zoom": 0
-                }
+                "file": "_posts/设计模式.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -67,12 +64,20 @@
               "type": "starred",
               "state": {}
             }
+          },
+          {
+            "id": "ead2cdce1292614e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 624.5
+    "width": 352.5
   },
   "right": {
     "id": "feb360bc97390477",
@@ -88,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "未命名.canvas",
+                "file": "_posts/设计模式.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "未命名.canvas",
+                "file": "_posts/设计模式.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -128,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "未命名.canvas"
+                "file": "_posts/设计模式.md"
               }
             }
           }
@@ -149,14 +154,25 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "324de41def128043",
+  "active": "e886f676ca7440db",
   "lastOpenFiles": [
-    "_posts/Shell.md",
-    "未命名.canvas",
     "_posts/2023-3-9 性能之巅.md",
+    "assets/img/设计模式/proxy_0.png",
+    "assets/img/设计模式/bridge_2.png",
+    "assets/img/设计模式/bridge_1.png",
+    "assets/img/设计模式/bridge_0.png",
+    "assets/img/设计模式",
+    "_posts/设计模式.md",
+    "_posts/算法.md",
+    "_posts/数据结构.md",
+    "_posts/事件驱动.md",
+    "_posts/Spring.md",
+    "_posts/Java.md",
+    "_posts/2023-3-28 测试.md",
+    "未命名.canvas",
+    "_posts/Shell.md",
     "未命名.md",
     "_posts/性能之巅.drawio",
-    "_posts/2023-3-28 测试.md",
     "2023-03-26.md",
     "_posts/2020-07-28-K8S-基础.md",
     "_posts/2020-07-31-k8s-进阶.md",
@@ -170,10 +186,6 @@
     "_posts/2020-08-25-istio.md",
     "assets/img/8-28-Linux性能分析/1398476-20180816160717376-2032689702.png",
     "assets/img/8-28-Linux性能分析/vectorloadavg.png",
-    "assets/img/8-28-Linux性能分析/image-20200829205938645.png",
-    "assets/img/8-28-Linux性能分析/image-20200829174413443.png",
-    "assets/img/8-28-Linux性能分析/image-20200829174347765.png",
-    "assets/img/8-28-Linux性能分析/image-20200829174331919.png",
     "_posts/2020-08-22-service_mesh.md",
     "_posts/assets/img",
     "_posts/assets",

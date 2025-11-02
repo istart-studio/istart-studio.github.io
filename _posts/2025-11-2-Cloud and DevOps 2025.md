@@ -96,3 +96,89 @@ tags: [devops,云原生,运维] # add tag
 | **DevOps Toolchain**                       | DevOps 的端到端工具生态体系。                          |
 | **General DevOps**                         | DevOps 文化与流程的普遍落地实践。                        |
 | **Feature Flags & Blue/Green Deployments** | 功能开关与蓝绿部署，用于安全发布新版本。                        |
+
+# 技术栈
+
+---
+
+## Innovators（创新者阶段）
+
+| 技术                                 | 对应技术栈与代表性工具                                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| **AI agents in cloud engineering** | OpenAI API、LangChain、AutoGPT、Azure AI Agents、Kubiya.ai、Cortex.dev            |
+| **MCP-based ops tooling**          | Model Context Protocol (OpenAI)、LangGraph、OpenDevin、Cognosys                 |
+| **Data observability**             | Monte Carlo、Databand、Bigeye、Soda Core、OpenLineage、Apache Superset            |
+| **Quantum cloud computing**        | IBM Qiskit、Amazon Braket、Azure Quantum、Google Cirq                           |
+| **Automation of governance**       | Open Policy Agent (OPA)、HashiCorp Sentinel、AWS Control Tower、Terraform Cloud |
+| **Low-code platforms**             | OutSystems、Mendix、Retool、PowerApps、Appsmith、Budibase                         |
+
+---
+
+## Early Adopters（早期采用者阶段）
+
+| 技术                                        | 对应技术栈与代表性工具                                                            |
+| ----------------------------------------- | ---------------------------------------------------------------------- |
+| **Platform engineering teams**            | Backstage、Humanitec、Port.io、KrakenD、Internal Developer Portals         |
+| **Cross-cloud / Hybrid approaches**       | Anthos（Google）、Azure Arc、AWS Outposts、HashiCorp Terraform、Crossplane   |
+| **DevEx Frameworks**                      | Backstage、Nx Monorepo、TurboRepo、GitHub Copilot、JetBrains AI            |
+| **Cross-cloud uniform automation**        | Terraform、Pulumi、Ansible、Spacelift、Cloudify                            |
+| **Data Mesh**                             | Databricks Delta Lake、Snowflake Data Sharing、Apache Kafka、dbt、DataHub  |
+| **Industry-aggregated incident analysis** | PagerDuty、Honeycomb、Datadog Incident、Blameless、Jeli.io                 |
+| **Policy as Code**                        | OPA（Open Policy Agent）、Conftest、Terraform Sentinel、Kyverno             |
+| **WebAssembly (Wasm)**                    | Wasmtime、Spin、Suborbital、WASI、Fermyon Cloud、Cloudflare Workers         |
+| **Software secure supply chain**          | Sigstore、SLSA、in-toto、Cosign、Syft/Grype、GitHub Dependabot              |
+| **Sustainability accounting**             | Cloud Carbon Footprint、AWS Carbon Tracker、Google Cloud Footprint API   |
+| **AI/ML Ops**                             | Kubeflow、MLflow、Weights & Biases、SageMaker、Vertex AI、Airflow           |
+| **Active-active Global DB Ops**           | CockroachDB、YugabyteDB、Aurora Global、Spanner、PlanetScale               |
+| **Full-stack tracing**                    | OpenTelemetry、Jaeger、Tempo、Honeycomb、New Relic                         |
+| **ChatOps**                               | Slack + BotKube、Mattermost、Microsoft Teams Bots、GitHub Actions ChatOps |
+| **DataOps**                               | Airbyte、dbt、Dagster、Prefect、Great Expectations                         |
+| **Documentation as Code**                 | MkDocs、Docusaurus、GitBook CLI、Sphinx、Docsify                           |
+
+---
+
+## Early Majority（早期主流阶段）
+
+| 技术                                     | 对应技术栈与代表性工具                                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Developer Experience (DevEx)**       | Backstage、VS Code Extensions、Nx/Turborepo、GitHub Actions、Vercel                                         |
+| **Service Mesh**                       | Istio、Linkerd、Consul Connect、Kuma、AWS App Mesh                                                          |
+| **eBPF**                               | Cilium、Pixie、BPFTrace、Falco、Tetragon                                                                    |
+| **Continuous Testing**                 | GitHub Actions + Playwright、Cypress、JUnit5、Testcontainers、Allure                                        |
+| **Chaos Engineering**                  | Gremlin、LitmusChaos、ChaosMesh、Steadybit                                                                 |
+| **Serverless Databases**               | Aurora Serverless、Neon、PlanetScale、FaunaDB、Supabase                                                     |
+| **Edge Computing**                     | Cloudflare Workers、AWS Lambda@Edge、Vercel Edge Functions、Fastly Compute@Edge                            |
+| **Shift-left on Security**             | Snyk、Checkov、Trivy、GitHub Advanced Security、OWASP ZAP                                                   |
+| **GitOps**                             | ArgoCD、FluxCD、Weave GitOps、Spacelift、Jenkins X                                                          |
+| **CD for Mobile**                      | Bitrise、AppCenter、Fastlane、GitHub Actions Mobile CI/CD                                                  |
+| **SRE（Site Reliability Engineering）**  | Prometheus、Grafana、Alertmanager、SLO Generator、Nobl9                                                     |
+| **Blameless Postmortems**              | Atlassian Opsgenie、Blameless、Rootly、Incident.io                                                         |
+| **Team Topologies**                    | Notion/Confluence + Architecture Decision Records (ADR)、Backstage                                       |
+| **Measuring Performance (Accelerate)** | DORA Metrics、LinearB、Pluralsight Flow、Jellyfish、DevLake                                                 |
+| **DORA Metrics**                       | Four Key Metrics（Deployment Frequency, Lead Time, MTTR, Change Failure Rate）—由 DevLake、Grafana Tempo 支持 |
+
+---
+
+## Late Majority（后期主流阶段）
+
+| 技术                                         | 对应技术栈与代表性工具                                                         |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| **Continuous Delivery (CD)**               | Jenkins、GitLab CI/CD、GitHub Actions、ArgoCD、Spinnaker                |
+| **FinOps**                                 | Apptio Cloudability、Kubecost、Spot.io、AWS Cost Explorer、CloudZero    |
+| **Enterprise DevOps Toolchain**            | Atlassian Stack（Jira, Bitbucket, Bamboo）、GitLab、Azure DevOps        |
+| **Observability**                          | Prometheus、Grafana、Datadog、New Relic、OpenTelemetry、Splunk           |
+| **CI Best Practices**                      | Jenkins、GitHub Actions、CircleCI、GitLab CI、Bazel CI                  |
+| **FaaS / BaaS**                            | AWS Lambda、Azure Functions、Google Cloud Functions、Firebase、Supabase |
+| **Monitoring & Logging**                   | Prometheus、Grafana Loki、ELK（Elastic, Logstash, Kibana）、Fluent Bit   |
+| **Centralized Log Aggregation**            | ELK、Graylog、Datadog Logs、New Relic Logs                             |
+| **Infrastructure as Code (IaC)**           | Terraform、Pulumi、Ansible、Chef、CloudFormation                        |
+| **Containers**                             | Docker、Podman、Buildah                                               |
+| **Container Orchestration**                | Kubernetes、K3s、EKS、GKE、AKS                                          |
+| **Software-Defined Networks (SDN)**        | Calico、Cilium、Open vSwitch、Flannel                                  |
+| **Continuous Integration Tooling**         | Jenkins、GitHub Actions、GitLab CI、CircleCI                           |
+| **Self-service Platforms**                 | Backstage、Humanitec、Port.io、Harness                                 |
+| **DevOps Toolchain**                       | GitHub + Terraform + ArgoCD + Prometheus + Grafana                  |
+| **General DevOps**                         | Agile + CI/CD + IaC + Monitoring 标准实践                               |
+| **Feature Flags & Blue/Green Deployments** | LaunchDarkly、Unleash、Split.io、Argo Rollouts、Spinnaker               |
+
+---
